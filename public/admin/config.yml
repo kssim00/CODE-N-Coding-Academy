@@ -1,1 +1,19 @@
+backend:
+  name: git-gateway
+  branch: main
 
+media_folder: "public/images"
+public_folder: "/images"
+
+collections:
+  - name: "lessons"
+    label: "수업 자료 관리"
+    folder: "src/content/blog"
+    create: true
+    slug: "{{slug}}"
+    fields:
+      - { label: "제목", name: "title", widget: "string" }
+      - { label: "설명", name: "description", widget: "string" }
+      - { label: "날짜", name: "pubDate", widget: "datetime" }
+      - { label: "카테고리", name: "category", widget: "select", options: ["파이썬", "스크래치", "엔트리"] }
+      - { label: "본문(HTML)", name: "body", widget: "markdown" }
