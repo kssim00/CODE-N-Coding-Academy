@@ -1,42 +1,33 @@
 ---
-// 대문을 '수업 목록'으로 바꾸는 마법의 코드입니다.
-import { getCollection } from 'astro:content';
-const posts = await getCollection('blog'); // 선생님이 올린 글들을 가져옵니다.
+// 에러 방지를 위해 수동으로 링크를 거는 안전 모드 코드입니다.
 ---
-
 <html lang="ko">
 <head>
 	<meta charset="utf-8" />
 	<title>CODE:N ACADEMY</title>
-	<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
 	<style>
-		body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; margin: 0; padding: 40px; }
-		header { text-align: center; margin-bottom: 60px; }
-		h1 { font-size: 3.5rem; color: #2d3436; margin-bottom: 10px; }
-		.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
-		.card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-decoration: none; color: inherit; transition: 0.3s; border-top: 8px solid #6c5ce7; }
-		.card:hover { transform: translateY(-10px); }
-		.category { background: #6c5ce7; color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.9rem; font-weight: bold; }
-		h2 { font-size: 1.6rem; margin: 15px 0; color: #2d3436; }
-		p { color: #636e72; line-height: 1.5; }
+		body { font-family: sans-serif; background: #f5f6fa; margin: 0; padding: 50px; text-align: center; }
+		.container { max-width: 800px; margin: 0 auto; background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
+		h1 { color: #2d3436; font-size: 3rem; }
+		.intro { color: #636e72; font-size: 1.2rem; margin-bottom: 40px; }
+		.lesson-card { display: block; background: #6c5ce7; color: white; padding: 20px; margin: 15px 0; border-radius: 15px; text-decoration: none; font-weight: bold; font-size: 1.3rem; transition: 0.3s; }
+		.lesson-card:hover { transform: scale(1.02); background: #5649c0; }
+		.admin-link { margin-top: 50px; display: inline-block; color: #b2bec3; text-decoration: none; font-size: 0.9rem; }
 	</style>
 </head>
 <body>
-	<header>
+	<div class="container">
 		<span style="background: #2d3436; color: white; padding: 5px 20px; border-radius: 50px; font-weight: 800;">CODE:N ACADEMY</span>
 		<h1>파이썬 수업 자료실</h1>
-		<p style="font-size: 1.2rem; color: #636e72;">학생들과 함께 즐겁게 코딩해요! 🐍</p>
-	</header>
+		<p class="intro">아래 링크를 클릭해서 수업을 시작하세요! 🐍</p>
+		
+		<!-- 여기에 선생님이 올린 수업 제목과 주소를 수동으로 적어주면 됩니다. -->
+		<a href="/lessons/python-set" class="lesson-card">1. 파이썬 세트(Set) 완전 정복</a>
+		<a href="/lessons/python-dict" class="lesson-card">2. 파이썬 딕셔너리 완전 정복</a>
+		<a href="/lessons/python-func" class="lesson-card">3. 파이썬 함수 완전 정복</a>
+		<a href="/lessons/python-while" class="lesson-card">4. 파이썬 While문 완전 정복</a>
 
-	<div class="grid">
-		{posts.map((post) => (
-			<a href={`/blog/${post.slug}`} class="card">
-				<span class="category">{post.data.category || '파이썬'}</span>
-				<h2>{post.data.title}</h2>
-				<p>{post.data.description}</p>
-				<div style="text-align: right; color: #6c5ce7; font-weight: bold; margin-top: 20px;">수업 시작하기 →</div>
-			</a>
-		))}
+		<a href="/admin" class="admin-link">관리자 페이지 접속</a>
 	</div>
 </body>
 </html>
