@@ -1,4 +1,5 @@
 ---
+// 에러의 원인이 되는 복잡한 가공을 싹 뺐습니다.
 const lessons = await Astro.glob('./lessons/*.html');
 ---
 
@@ -11,23 +12,22 @@ const lessons = await Astro.glob('./lessons/*.html');
         body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; margin: 0; padding: 40px; color: #2d3436; }
         header { text-align: center; margin-bottom: 50px; }
         
-        /* 로고 크기 및 정렬 */
+        /* 로고 스타일 */
         .logo { max-width: 200px; height: auto; margin-bottom: 20px; } 
         
         h1 { font-size: 2.8rem; color: #6c5ce7; margin: 0; }
         .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; }
         
-        /* 카드 디자인 강화 */
         .card { 
             background: white; border-radius: 20px; padding: 30px; 
             box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-decoration: none; 
             color: #2d3436; transition: 0.3s; border-top: 8px solid #6c5ce7;
             display: flex; flex-direction: column; justify-content: space-between;
-            min-height: 150px;
+            min-height: 120px;
         }
         .card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(108, 92, 231, 0.2); }
         .category { color: #6c5ce7; font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; display: block; }
-        .card-title { font-size: 1.4rem; font-weight: 800; line-height: 1.3; }
+        .card-title { font-size: 1.4rem; font-weight: 800; }
         .go-btn { text-align: right; color: #6c5ce7; font-weight: bold; margin-top: 20px; font-size: 0.9rem; }
         
         .admin-footer { margin-top: 80px; text-align: center; color: #b2bec3; font-size: 0.8rem; }
@@ -35,24 +35,25 @@ const lessons = await Astro.glob('./lessons/*.html');
 </head>
 <body>
     <header>
-        <!-- 로고 파일명이 logo.png가 아니면 아래 파일명을 고쳐주세요! -->
-        <img src="/최종 3.png" alt="학원 로고" class="logo" onerror="this.src='https://via.placeholder.com/200x80?text=CODEN+ACADEMY';" /> 
+        <!-- 로고 이미지 (파일명이 다르면 아래 /logo.png를 수정하세요) -->
+        <img src="/최종 3.png" alt="학원 로고" class="logo" onerror="this.src='https://via.placeholder.com/300x100?text=CODE:N+ACADEMY';" /> 
         <h1>파이썬 수업 자료실</h1>
         <p>코딩으로 미래를 그리는 즐거운 교실</p>
     </header>
 
     <div class="grid">
-        {lessons.length === 0 && <p>아직 등록된 수업이 없습니다.</p>}
+        {lessons.length === 0 && <p style="text-align:center; grid-column: 1/-1;">아직 등록된 수업이 없습니다.</p>}
 
         {lessons.map((lesson) => {
-            // 제목이 없으면 파일 이름에서 가져오기
-            const displayTitle = lesson.frontmatter?.title || 
-                                 lesson.url.split('/').pop().replace('.html', '').replace(/-/g, ' ');
+            // 에러를 유발하는 split() 등을 전혀 사용하지 않는 가장 안전한 방식
+            const title = (lesson.frontmatter && lesson.frontmatter.title) ? lesson.frontmatter.title : "파이썬 수업 자료";
+            const url = lesson.url ? lesson.url : "#";
+
             return (
-                <a href={lesson.url} class="card">
+                <a href={url} class="card">
                     <div>
                         <span class="category">파이썬 수업</span>
-                        <div class="card-title">{displayTitle}</div>
+                        <div class="card-title">{title}</div>
                     </div>
                     <div class="go-btn">수업 입장하기 →</div>
                 </a>
