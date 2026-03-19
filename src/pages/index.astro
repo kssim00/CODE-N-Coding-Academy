@@ -1,17 +1,54 @@
 ---
-// 아무런 로직도 넣지 않은 가장 안전한 코드입니다.
+const lessons = await Astro.glob('./lessons/*.{html,md}');
 ---
-<!DOCTYPE html>
+
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>CODE:N ACADEMY</title>
+    <title>CODE:N ACADEMY - 파이썬 수업 자료실</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+    <style>
+        body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; margin: 0; padding: 40px; color: #2d3436; }
+        header { text-align: center; margin-bottom: 50px; }
+        
+        /* 로고 이미지 스타일 */
+        .logo { width: 180px; height: auto; margin-bottom: 15px; } 
+        
+        h1 { font-size: 2.5rem; color: #6c5ce7; margin-top: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; }
+        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-decoration: none; color: inherit; transition: 0.3s; border-top: 6px solid #6c5ce7; }
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(108, 92, 231, 0.15); }
+        .category { background: #ede7f6; color: #6c5ce7; padding: 5px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; }
+        h2 { font-size: 1.4rem; margin: 15px 0 10px 0; }
+        .desc { color: #636e72; font-size: 1rem; line-height: 1.4; height: 2.8em; overflow: hidden; }
+        .go-btn { text-align: right; color: #6c5ce7; font-weight: bold; margin-top: 15px; }
+        .admin-footer { margin-top: 80px; text-align: center; color: #b2bec3; font-size: 0.8rem; }
+    </style>
 </head>
-<body style="font-family: sans-serif; text-align: center; padding: 100px; background-color: #f5f6fa;">
-    <h1 style="color: #6c5ce7; font-size: 3rem;">🐍 CODE:N ACADEMY</h1>
-    <p style="font-size: 1.2rem; color: #636e72;">선생님의 파이썬 수업 자료실입니다.</p>
-    <div style="margin-top: 30px;">
-        <a href="/admin/" style="display: inline-block; padding: 15px 30px; background-color: #2d3436; color: white; border-radius: 10px; text-decoration: none; font-weight: bold;">관리자 페이지 로그인</a>
+<body>
+    <header>
+        <!-- 뱀 로고 대신 학원 로고 이미지를 넣는 곳 -->
+        <img src="/최종3.png" alt="학원 로고" class="logo" /> 
+        
+        <h1>파이썬 자료실</h1>
+        <p>코딩으로 미래를 그리는 즐거운 교실</p>
+    </header>
+
+    <div class="grid">
+        {lessons.length === 0 && <p style="grid-column: 1/-1; text-align: center;">아직 등록된 수업이 없습니다. 관리자 페이지에서 자료를 올려주세요!</p>}
+
+        {lessons.map((lesson) => (
+            <a href={lesson.url} class="card">
+                <span class="category">{lesson.frontmatter.category || '파이썬'}</span>
+                <h2>{lesson.frontmatter.title}</h2>
+                <p class="desc">{lesson.frontmatter.description}</p>
+                <div class="go-btn">수업 입장하기 →</div>
+            </a>
+        ))}
+    </div>
+
+    <div class="admin-footer">
+        <a href="/admin/" style="color: inherit; text-decoration: none;">관리자 전용 로그인</a>
     </div>
 </body>
 </html>
