@@ -1,6 +1,6 @@
 ---
-// 에러 방지를 위해 데이터를 더 안전하게 가져오는 코드입니다.
-const lessons = await Astro.glob('./lessons/*.{html,md}');
+// 에러가 절대 나지 않도록 가장 단순하게 구성한 코드입니다.
+const lessons = await Astro.glob('./lessons/*.html');
 ---
 
 <html lang="ko">
@@ -9,51 +9,32 @@ const lessons = await Astro.glob('./lessons/*.{html,md}');
     <title>CODE:N ACADEMY - 파이썬 수업 자료실</title>
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
     <style>
-        body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; margin: 0; padding: 40px; color: #2d3436; }
-        header { text-align: center; margin-bottom: 50px; }
-        
-        /* 로고 이미지 스타일 */
+        body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; margin: 0; padding: 40px; color: #2d3436; text-align: center; }
+        header { margin-bottom: 50px; }
         .logo { width: 180px; height: auto; margin-bottom: 15px; } 
-        
         h1 { font-size: 2.5rem; color: #6c5ce7; margin-top: 10px; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; }
-        .card { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-decoration: none; color: inherit; transition: 0.3s; border-top: 6px solid #6c5ce7; }
-        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(108, 92, 231, 0.15); }
-        .category { background: #ede7f6; color: #6c5ce7; padding: 5px 12px; border-radius: 50px; font-size: 0.8rem; font-weight: bold; }
-        h2 { font-size: 1.4rem; margin: 15px 0 10px 0; }
-        .desc { color: #636e72; font-size: 1rem; line-height: 1.4; height: 2.8em; overflow: hidden; }
-        .go-btn { text-align: right; color: #6c5ce7; font-weight: bold; margin-top: 15px; }
-        .admin-footer { margin-top: 80px; text-align: center; color: #b2bec3; font-size: 0.8rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; max-width: 1000px; margin: 0 auto; }
+        .card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-decoration: none; color: #6c5ce7; transition: 0.3s; font-weight: bold; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; min-height: 100px; border: 2px solid transparent; }
+        .card:hover { transform: translateY(-5px); border-color: #6c5ce7; box-shadow: 0 15px 30px rgba(108, 92, 231, 0.1); }
+        .admin-footer { margin-top: 80px; color: #b2bec3; font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <header>
-        <!-- 학원 로고 이미지를 넣는 곳 (public 폴더에 logo.png가 있어야 함) -->
-        <img src="/최종3.png" alt="학원 로고" class="logo" onerror="this.style.display='none'; document.getElementById('alt-title').style.display='block';" /> 
-        <h2 id="alt-title" style="display:none; color:#2d3436;">CODE:N ACADEMY</h2>
-        
-        <h1>파이썬 자료실</h1>
+        <!-- 로고 이미지 -->
+        <img src="/logo.png" alt="학원 로고" class="logo" onerror="this.style.display='none';" /> 
+        <h1>파이썬 수업 자료실</h1>
         <p>코딩으로 미래를 그리는 즐거운 교실</p>
     </header>
 
     <div class="grid">
-        {lessons.length === 0 && <p style="grid-column: 1/-1; text-align: center;">아직 등록된 수업이 없습니다.</p>}
+        {lessons.length === 0 && <p>아직 등록된 수업이 없습니다.</p>}
 
-        {lessons.map((lesson) => {
-            // 데이터가 없을 경우를 대비한 안전 장치
-            const title = lesson.frontmatter?.title || lesson.url.split('/').pop().replace('.html', '');
-            const category = lesson.frontmatter?.category || '파이썬';
-            const description = lesson.frontmatter?.description || '수업 내용을 확인해 보세요!';
-
-            return (
-                <a href={lesson.url} class="card">
-                    <span class="category">{category}</span>
-                    <h2>{title}</h2>
-                    <p class="desc">{description}</p>
-                    <div class="go-btn">수업 입장하기 →</div>
-                </a>
-            );
-        })}
+        {lessons.map((lesson) => (
+            <a href={lesson.url || "#"} class="card">
+                {lesson.frontmatter?.title || "파이썬 수업 자료"}
+            </a>
+        ))}
     </div>
 
     <div class="admin-footer">
