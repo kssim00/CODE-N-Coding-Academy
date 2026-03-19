@@ -1,70 +1,42 @@
 ---
-import Layout from '../components/Layout.astro';
-import FeedbackForm from '../components/FeedbackForm.astro';
+// 대문을 '수업 목록'으로 바꾸는 마법의 코드입니다.
+import { getCollection } from 'astro:content';
+const posts = await getCollection('blog'); // 선생님이 올린 글들을 가져옵니다.
 ---
 
-<Layout title="Astro Toolbox">
-  <main>
-    <div class="header">
-      <div class="logo">
-        <img
-          src="https://user-images.githubusercontent.com/43764894/223557634-f62606c5-bdf9-476c-9264-0d3728189962.png"
-          alt="Netlify and Astro.js logos"
-        />
-      </div>
-    </div>
-    <div class="intro">
-      <p>
-        Hi 👋! This template gives you an
-        <a href="https://astro.build/">Astro</a> app with the scaffolding for
-        <a href="https://ntl.fyi/3upc4Qo">Netlify Functions</a>, <a
-          href="https://ntl.fyi/3bICRk6">Forms</a
-        >, and
-        <a href="https://ntl.fyi/3PcY8RH">Redirects</a>. Our aim was to give you
-        the code you would need to hit the ground running with a few fun
-        features.
-      </p>
+<html lang="ko">
+<head>
+	<meta charset="utf-8" />
+	<title>CODE:N ACADEMY</title>
+	<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.8/dist/web/static/pretendard.css" />
+	<style>
+		body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; margin: 0; padding: 40px; }
+		header { text-align: center; margin-bottom: 60px; }
+		h1 { font-size: 3.5rem; color: #2d3436; margin-bottom: 10px; }
+		.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 30px; max-width: 1200px; margin: 0 auto; }
+		.card { background: white; border-radius: 20px; padding: 30px; box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-decoration: none; color: inherit; transition: 0.3s; border-top: 8px solid #6c5ce7; }
+		.card:hover { transform: translateY(-10px); }
+		.category { background: #6c5ce7; color: white; padding: 4px 12px; border-radius: 50px; font-size: 0.9rem; font-weight: bold; }
+		h2 { font-size: 1.6rem; margin: 15px 0; color: #2d3436; }
+		p { color: #636e72; line-height: 1.5; }
+	</style>
+</head>
+<body>
+	<header>
+		<span style="background: #2d3436; color: white; padding: 5px 20px; border-radius: 50px; font-weight: 800;">CODE:N ACADEMY</span>
+		<h1>파이썬 수업 자료실</h1>
+		<p style="font-size: 1.2rem; color: #636e72;">학생들과 함께 즐겁게 코딩해요! 🐍</p>
+	</header>
 
-      <p>
-        You can find the code for this project on GitHub at
-        <a href="https://github.com/netlify-templates/astro-toolbox"
-          >https://github.com/netlify-templates/astro-toolbox</a
-        >! Happy coding!
-      </p>
-    </div>
-    <FeedbackForm />
-    <a class="jokes-link" href="/api/joke">
-      <h3>Click here for function-loaded jokes!</h3>
-    </a>
-  </main>
-</Layout>
-
-<style>
-  .logo img {
-    padding: 30px 0;
-    width: 100%;
-  }
-
-  main {
-    padding: 2rem 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    margin: 0 auto;
-    max-width: 60ch;
-    align-items: center;
-  }
-
-  footer {
-    width: 100%;
-    height: 100px;
-    border-top: 1px solid #eaeaea;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  footer img {
-    width: 20px;
-  }
-</style>
+	<div class="grid">
+		{posts.map((post) => (
+			<a href={`/blog/${post.slug}`} class="card">
+				<span class="category">{post.data.category || '파이썬'}</span>
+				<h2>{post.data.title}</h2>
+				<p>{post.data.description}</p>
+				<div style="text-align: right; color: #6c5ce7; font-weight: bold; margin-top: 20px;">수업 시작하기 →</div>
+			</a>
+		))}
+	</div>
+</body>
+</html>
