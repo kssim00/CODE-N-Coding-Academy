@@ -1,6 +1,16 @@
 ---
-// 에러 유발 가능성이 있는 복잡한 로직을 모두 제거한 '무결점' 코드입니다.
+// 모든 수업 자료(html)를 가져옵니다.
 const lessons = await Astro.glob('./lessons/*.html');
+
+// 파일 경로에서 파일명(한글 포함)을 안전하게 추출하는 함수
+function getFileName(filePath) {
+    if (!filePath) return "수업 자료";
+    // 경로에서 마지막 파일명만 추출
+    const parts = filePath.split('/');
+    const fullFileName = parts[parts.length - 1]; 
+    // .html 확장자 제거 및 한글 디코딩
+    return decodeURIComponent(fullFileName.replace('.html', ''));
+}
 ---
 
 <html lang="ko">
@@ -11,9 +21,10 @@ const lessons = await Astro.glob('./lessons/*.html');
     <style>
         body { font-family: 'Pretendard', sans-serif; background: #f5f6fa; margin: 0; padding: 40px; color: #2d3436; text-align: center; }
         header { margin-bottom: 50px; }
-        .logo { max-width: 250px; height: auto; margin-bottom: 20px; } 
+        .logo { width: 250px; height: auto; margin-bottom: 20px; } 
         h1 { font-size: 2.8rem; color: #6c5ce7; margin: 0; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; text-align: left; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px; max-width: 1000px; margin: 0 auto; text-align: left; }
+        
         .card { 
             background: white; border-radius: 20px; padding: 30px; 
             box-shadow: 0 10px 20px rgba(0,0,0,0.05); text-decoration: none; 
@@ -23,33 +34,39 @@ const lessons = await Astro.glob('./lessons/*.html');
         }
         .card:hover { transform: translateY(-10px); box-shadow: 0 15px 30px rgba(108, 92, 231, 0.2); }
         .category { color: #6c5ce7; font-weight: bold; font-size: 0.9rem; margin-bottom: 10px; display: block; }
-        .card-title { font-size: 1.4rem; font-weight: 800; line-height: 1.3; color: #2d3436; }
+        .card-title { font-size: 1.5rem; font-weight: 800; line-height: 1.3; }
         .go-btn { text-align: right; color: #6c5ce7; font-weight: bold; margin-top: 20px; font-size: 1rem; }
         .admin-footer { margin-top: 80px; text-align: center; color: #b2bec3; font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <header>
-        <!-- 로고 이미지 ('최종 3.png' 주소 안전 처리) -->
+        <!-- 로고 이미지 -->
         <img src="/최종%203.png" alt="학원 로고" class="logo" onerror="this.src='https://via.placeholder.com/300x100?text=CODE:N+ACADEMY';" /> 
         <h1>파이썬 수업 자료실</h1>
         <p>코딩으로 미래를 그리는 즐거운 교실</p>
     </header>
 
     <div class="grid">
-        {lessons.map((lesson) => (
-            /* 1. lesson.url이 없으면 제목으로 주소를 추측해서라도 연결 (404 방지) */
-            <a href={lesson.url ? lesson.url : `/lessons/${lesson.file?.split('/').pop().replace('.html', '')}/`} class="card">
-                <div>
-                    <span class="category">파이썬 수업</span>
-                    <div class="card-title">
-                        {/* 2. 제목이 없으면 파일명에서 한글을 추출하지 않고 안전하게 표시 */}
-                        {lesson.frontmatter?.title || "파이썬 수업 입장하기"}
+        {lessons.length === 0 && <p style="text-align:center; grid-column: 1/-1;">아직 등록된 수업이 없습니다.</p>}
+
+        {lessons.map((lesson) => {
+            // 파일명에서 제목 추출 (예: 파이썬-튜플)
+            const fileName = getFileName(lesson.file);
+            
+            // 링크 주소를 직접 생성 (한글 파일명 대응을 위해 .html을 직접 붙임)
+            const targetUrl = `/lessons/${fileName}.html`;
+
+            return (
+                <a href={targetUrl} class="card">
+                    <div>
+                        <span class="category">파이썬 수업</span>
+                        <div class="card-title">{fileName.replace(/-/g, ' ')}</div>
                     </div>
-                </div>
-                <div class="go-btn">수업 입장하기 →</div>
-            </a>
-        ))}
+                    <div class="go-btn">수업 입장하기 →</div>
+                </a>
+            );
+        })}
     </div>
 
     <div class="admin-footer">
